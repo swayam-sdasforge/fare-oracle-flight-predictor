@@ -1,39 +1,70 @@
-# AI Travel Analyst ✈️
+# ✈️ AI Travel Analyst Dashboard
 
-## Project Overview
-This project is a data-driven Data Science and Machine Learning solution built to analyze flight prices, uncover the hidden factors that drive ticket costs, and provide actionable recommendations to help travelers make smarter booking decisions.
+## 📌 Project Overview
+The **AI Travel Analyst** is a full-stack Data Science and Machine Learning application built for the MIC AIML Department Recruitment Challenge (Track 3). It goes beyond standard Jupyter Notebooks by offering a production-ready, dual-role SaaS application. Consumers ("Travelers") can use the app to find flight recommendations and predict ticket prices, while Administrators can access a secure MLOps backend to upload new data, view Exploratory Data Analysis (EDA) graphs, and dynamically retrain the Machine Learning models.
 
-## Problem Statement
-Flight prices are highly volatile and confusing for the average consumer. This project aims to clean historical flight data, visualize pricing trends, mathematically identify the key drivers of price hikes, and build a Machine Learning model capable of predicting prices.
+## 🎯 Problem Statement
+Flight prices are highly volatile and confusing for consumers. The goal of this project is to ingest a massive, messy dataset of historical flight prices, clean it, and build an intelligent system that can:
+1. Identify the major factors driving flight prices.
+2. Predict future ticket prices using Machine Learning.
+3. Calculate the mathematical "Sweet Spot" (cheapest day to book) to save consumers money.
 
-## Part 1: Exploration & Insights
+## ⚙️ Installation Instructions
+To run this project locally on your machine:
+1. Clone this repository:
+   ```bash
+   git clone <your-repository-url>
+   cd MIC_Project
+   ```
+2. Install the required Python libraries:
+   ```bash
+   pip install pandas numpy scikit-learn streamlit matplotlib seaborn
+   ```
+3. Launch the web dashboard:
+   ```bash
+   streamlit run app.py
+   ```
+**Login Details:**
+* **Traveler Role:** Open by default.
+* **Administrator Role:** Select "Administrator" in the sidebar and enter the password: `admin123`.
 
-### Major Factors Affecting Flight Prices
-1. **Travel Class:** The single largest driver of price. Business class tickets have a massively higher baseline and a much wider price variance compared to Economy.
-2. **Days Before Departure:** The booking window is the second largest factor. Prices show an aggressive, exponential spike in the final 14 days before the flight.
-3. **Airline Brand:** Certain premium airlines consistently charge a "brand tax", whereas budget carriers maintain a strict low-cost ceiling.
+## 📊 Dataset Used
+The project utilizes the `flight_pricing_dataset.csv` provided for the hackathon. 
+* **Size:** Over 100,000 raw flight records.
+* **Features:** Airline, Source, Destination, Travel Class, Total Stops, Distance (km), Days Before Departure, and Price.
+* **Cleaning:** The dataset required heavy preprocessing to remove strings from numeric columns (e.g., converting "4191.4 km" to pure floats) and mapping text data (e.g., "non-stop" to `0`).
 
-### Insights & Recommendations
-* **The Booking Window:** Travelers should book flights at least **3 to 4 weeks in advance**. The data shows that waiting for a "last-minute deal" is a myth; prices surge in the final 15 days.
-* **The Layover Myth:** Do not blindly book flights with layovers assuming they are cheaper. 1-stop flights are often just as expensive as non-stop flights depending on the airline. 
-* **Brand Tax on Short Flights:** Travelers should prioritize budget carriers for short-duration flights, as the premium cost of legacy airlines is not mathematically justified for short trips.
+## 🧪 Methodology
+1. **Part 1 (Exploratory Data Analysis):** Missing values were imputed and text anomalies were stripped using Regex. We generated 5 distinct visualizations (Histograms, Barplots, Boxplots, Correlation Matrices) to identify pricing trends.
+2. **Part 2 (Predictive Modeling):** Categorical data was transformed using One-Hot Encoding. The data was split 80/20. We raced three models against each other: **Linear Regression, Decision Tree, and Random Forest**.
+3. **Part 3 (Advanced Analytics):** We mathematically grouped the data to find the lowest average price corresponding to the `Days_Before_Departure`, finding the precise booking "Sweet Spot".
+4. **UI Architecture:** We deployed a Dual-Role architecture using Streamlit's Session State, injected with custom HTML/CSS (Glassmorphism) to achieve a Vercel-style frontend.
 
-## Part 2: Machine Learning Modeling
-* **Methodology:** We utilized a **Random Forest Regressor** (an ensemble decision-tree method).
-* **Feature Engineering:** We used One-Hot Encoding to transform categorical variables (like Airline and Travel Class) into numerical features.
-* **Results:** The model successfully predicts prices and outputs a `Feature Importance` matrix that proves Travel Class and Days Before Departure are the primary price drivers.
+## 💻 Technologies Used
+* **Data Processing:** Python, Pandas, Numpy
+* **Machine Learning:** Scikit-Learn (RandomForest, DecisionTree, LinearRegression)
+* **Data Visualization:** Matplotlib, Seaborn
+* **Web Deployment:** Streamlit (with custom HTML/CSS for UI override)
 
-## Installation Instructions
-1. Clone this repository.
-2. Install the required dependencies:
-   `pip install pandas matplotlib seaborn scikit-learn streamlit`
-3. Run the data cleaning script: `python 01_data_cleaning.py`
-4. Run the visualizations: `python 02_visualizations.py`
-5. Run the ML model: `python 03_modeling.py`
+## 📈 Results
+* **Winning Model:** The **Random Forest Regressor** won the Model Comparison Race, achieving the highest R-Squared Accuracy and lowest Mean Absolute Error.
+* **Primary Price Drivers:** Our Feature Importance extraction proved that *Travel Class* and *Days Before Departure* are the strongest predictors of price.
+* **Booking Sweet Spot:** Across all airlines, the global sweet spot to book is exactly **176 days** in advance. However, this varies heavily by airline (e.g., Etihad is cheapest 68 days out).
 
-## Technologies Used
-* **Python**
-* **Pandas & NumPy** (Data Cleaning & Manipulation)
-* **Matplotlib & Seaborn** (Exploratory Data Analysis)
-* **Scikit-Learn** (Machine Learning & Feature Engineering)
+## ⚠️ Challenges Faced
+* **Data Formatting Anomalies:** The raw dataset contained unexpected text inside numerical columns (e.g., the word "one" instead of the number 1, or "days" attached to integers). This initially crashed the Scikit-Learn algorithms. We solved this by writing a robust, dynamic Regex cleaning pipeline.
+* **UI Limitations:** Streamlit natively looks like an internal data dashboard, not a consumer website. We overcame this by injecting custom CSS to hide standard Streamlit navigation, applying edge-to-edge padding, and using Glassmorphism to create a premium SaaS aesthetic.
 
+## 🚀 Future Improvements
+* **Continuous Training (MLOps):** Upgrading from a static CSV to a live **Supabase PostgreSQL** database, allowing a web-scraper to ingest real-time flight prices daily to automatically retrain the model.
+* **Model Explainability:** Integrating the **SHAP** library to provide users with exact mathematical breakdowns of why their specific ticket was priced the way it was.
+* **Frontend Decoupling:** Migrating the Traveler-facing side of the app to a custom **Next.js/React** frontend deployed on Vercel, while connecting it to the Random Forest model via a **FastAPI** Python backend.
+
+## 📸 Screenshots
+*(Below are examples of the data visualizations generated by the Admin MLOps backend)*
+
+### AI Feature Importance
+![Feature Importance](graphs/6_feature_importance.png)
+
+### Booking Sweet Spot Analysis
+![Sweet Spot](graphs/7_part3_booking_analysis.png)
