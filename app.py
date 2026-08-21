@@ -175,8 +175,8 @@ def train_compare_models(df):
     
     models = {
         "Linear Regression": LinearRegression(),
-        "Decision Tree": DecisionTreeRegressor(max_depth=15, random_state=42),
-        "Random Forest": RandomForestRegressor(n_estimators=100, max_depth=20, random_state=42, n_jobs=-1)
+        "Decision Tree": DecisionTreeRegressor(max_depth=10, random_state=42),
+        "Random Forest": RandomForestRegressor(n_estimators=50, max_depth=12, random_state=42, n_jobs=-1)
     }
     
     results = []
