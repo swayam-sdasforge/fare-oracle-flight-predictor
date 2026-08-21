@@ -1,5 +1,7 @@
 # ✈️ AI Travel Analyst Dashboard
 
+🚀 **[Click Here to view the Live Application](https://fare-oracle-flight-predictor-fwfonsmyrihfesnkfrshbi.streamlit.app/)**
+
 ## 📌 Project Overview
 The **AI Travel Analyst** is a full-stack Data Science and Machine Learning application built for the MIC AIML Department Recruitment Challenge (Track 3). It goes beyond standard Jupyter Notebooks by offering a production-ready, dual-role SaaS application. Consumers ("Travelers") can use the app to find flight recommendations and predict ticket prices, while Administrators can access a secure MLOps backend to upload new data, view Exploratory Data Analysis (EDA) graphs, and dynamically retrain the Machine Learning models.
 
@@ -38,7 +40,10 @@ The project utilizes the `flight_pricing_dataset.csv` provided for the hackathon
 1. **Part 1 (Exploratory Data Analysis):** Missing values were imputed and text anomalies were stripped using Regex. We generated 5 distinct visualizations (Histograms, Barplots, Boxplots, Correlation Matrices) to identify pricing trends.
 2. **Part 2 (Predictive Modeling):** Categorical data was transformed using One-Hot Encoding. The data was split 80/20. We raced three models against each other: **Linear Regression, Decision Tree, and Random Forest**.
 3. **Part 3 (Advanced Analytics):** We mathematically grouped the data to find the lowest average price corresponding to the `Days_Before_Departure`, finding the precise booking "Sweet Spot".
-4. **UI Architecture:** We deployed a Dual-Role architecture using Streamlit's Session State, injected with custom HTML/CSS (Glassmorphism) to achieve a Vercel-style frontend.
+4. **Consumer Features (Traveler View):**
+   * **Flight Finder (Recommendation Engine):** A custom tool that filters flights by route and ranks the top 3 best flights based on a custom "Value Score" (balancing ticket price and flight duration).
+   * **Smart Alerts:** Cross-references the user's booking timeframe with the historical sweet spot to flash dynamic alerts (e.g., Red for last-minute price surge warnings, Green for optimal booking windows).
+5. **UI Architecture:** We deployed a Dual-Role architecture using Streamlit's Session State, injected with custom HTML/CSS (Glassmorphism) to achieve a Vercel-style frontend.
 
 ## 💻 Technologies Used
 * **Data Processing:** Python, Pandas, Numpy

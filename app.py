@@ -249,9 +249,10 @@ if role == "Administrator":
             col3, col4 = st.columns(2)
             with col3:
                 if 'Travel_Class' in df.columns:
-                    fig3, ax3 = plt.subplots()
-                    sns.boxplot(data=df, x='Travel_Class', y='Price', ax=ax3, palette='Set2')
+                    fig3, ax3 = plt.subplots(figsize=(6, 5))
+                    sns.boxplot(data=df, x='Travel_Class', y='Price', ax=ax3, palette='Set2', showfliers=False)
                     ax3.set_title("3. Price vs Travel Class")
+                    plt.tight_layout()
                     st.pyplot(fig3)
             with col4:
                 if 'Total_Stops' in df.columns:
@@ -266,6 +267,13 @@ if role == "Administrator":
             numeric_cols = df.select_dtypes(include=[np.number]).columns
             sns.heatmap(df[numeric_cols].corr(), annot=True, cmap='coolwarm', fmt=".2f", ax=ax5)
             st.pyplot(fig5)
+            
+            st.markdown("""
+            <div style='text-align: center; color: #A0AEC0; font-size: 0.9rem;'>
+                <b>Dark Red (Approaching 1.0):</b> Strong positive correlation &nbsp;|&nbsp; 
+                <b>Dark Blue (Approaching -1.0):</b> Strong negative correlation
+            </div>
+            """, unsafe_allow_html=True)
             
             st.divider()
             st.subheader("🧠 Model Race & Evaluation")
