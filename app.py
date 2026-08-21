@@ -275,7 +275,11 @@ if role == "Administrator":
             with col6:
                 if 'Duration_minutes' in df.columns:
                     fig6, ax6 = plt.subplots(figsize=(6, 5))
-                    sns.scatterplot(data=df, x='Duration_minutes', y='Price', alpha=0.3, ax=ax6, color='#00F0FF')
+                    # Sample the data so it isn't a massive blob, and add a red trendline
+                    sample_df = df.sample(min(3000, len(df)), random_state=42)
+                    sns.regplot(data=sample_df, x='Duration_minutes', y='Price', 
+                                scatter_kws={'alpha': 0.4, 'color': '#00F0FF', 's': 15}, 
+                                line_kws={'color': '#FF0055', 'linewidth': 2}, ax=ax6)
                     ax6.set_title("6. Flight Duration vs Price")
                     plt.tight_layout()
                     st.pyplot(fig6)
