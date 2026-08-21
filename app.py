@@ -139,6 +139,9 @@ def clean_data(df):
     if 'Price' in df.columns:
         df['Price'] = df['Price'].astype(str).str.replace(r'[^\d.]', '', regex=True)
         df['Price'] = pd.to_numeric(df['Price'], errors='coerce')
+        # Remove extreme 1% outliers to drastically improve ML Accuracy
+        q_high = df['Price'].quantile(0.99)
+        df = df[df['Price'] <= q_high]
         
     if 'Distance_km' in df.columns:
         df['Distance_km'] = pd.to_numeric(df['Distance_km'].astype(str).str.replace(r'[^\d.]', '', regex=True), errors='coerce')
@@ -172,8 +175,8 @@ def train_compare_models(df):
     
     models = {
         "Linear Regression": LinearRegression(),
-        "Decision Tree": DecisionTreeRegressor(max_depth=10, random_state=42),
-        "Random Forest": RandomForestRegressor(n_estimators=20, max_depth=10, random_state=42, n_jobs=-1)
+        "Decision Tree": DecisionTreeRegressor(max_depth=15, random_state=42),
+        "Random Forest": RandomForestRegressor(n_estimators=100, max_depth=20, random_state=42, n_jobs=-1)
     }
     
     results = []
