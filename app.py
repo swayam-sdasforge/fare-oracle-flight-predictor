@@ -431,10 +431,24 @@ elif role == "Traveler":
                 if f"Destination_{u_dest}" in input_data.columns: input_data.loc[0, f"Destination_{u_dest}"] = 1
                 
                 prediction = best_model.predict(input_data)[0]
+                low_end = prediction * 0.88
+                high_end = prediction * 1.12
+                
                 st.markdown(f"""
                 <div style="text-align: center; margin-top: 30px; padding: 40px; background: rgba(0, 240, 255, 0.05); border-radius: 16px; border: 1px solid rgba(0, 240, 255, 0.2);">
                     <h4 style="color: #A0AEC0; margin-bottom: 10px;">AI Estimated Ticket Price</h4>
-                    <h1 style="font-size: 3.5rem; margin: 0; background: linear-gradient(90deg, #FFFFFF, #00F0FF); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Rs. {prediction:,.2f}</h1>
+                    <h1 style="font-size: 3.5rem; margin: 0; background: linear-gradient(90deg, #FFFFFF, #00F0FF); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Rs. {prediction:,.0f}</h1>
+                    <div style="display: flex; justify-content: center; gap: 20px; margin-top: 20px;">
+                        <div style="background: rgba(0, 255, 136, 0.1); padding: 10px 20px; border-radius: 8px; border: 1px solid rgba(0, 255, 136, 0.3);">
+                            <span style="color: #00FF88; font-size: 0.9rem;">🟢 Excellent Deal<br><b>Below Rs. {low_end:,.0f}</b></span>
+                        </div>
+                        <div style="background: rgba(0, 240, 255, 0.1); padding: 10px 20px; border-radius: 8px; border: 1px solid rgba(0, 240, 255, 0.3);">
+                            <span style="color: #00F0FF; font-size: 0.9rem;">🔵 Expected Range<br><b>Rs. {low_end:,.0f} - {high_end:,.0f}</b></span>
+                        </div>
+                        <div style="background: rgba(255, 0, 85, 0.1); padding: 10px 20px; border-radius: 8px; border: 1px solid rgba(255, 0, 85, 0.3);">
+                            <span style="color: #FF0055; font-size: 0.9rem;">🔴 Too Expensive<br><b>Above Rs. {high_end:,.0f}</b></span>
+                        </div>
+                    </div>
                 </div>
                 """, unsafe_allow_html=True)
                 
