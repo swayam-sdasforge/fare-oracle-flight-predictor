@@ -262,11 +262,30 @@ if role == "Administrator":
                     st.pyplot(fig4)
                     
             # ROW 3
-            st.markdown("**5. Feature Correlation Matrix**")
-            fig5, ax5 = plt.subplots(figsize=(10, 4))
+            col5, col6 = st.columns(2)
+            with col5:
+                if 'Weekday' in df.columns:
+                    fig5, ax5 = plt.subplots(figsize=(6, 5))
+                    days_order = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+                    sns.barplot(data=df, x='Weekday', y='Price', order=days_order, ax=ax5, palette='muted')
+                    ax5.set_title("5. Price vs Day of the Week")
+                    plt.xticks(rotation=45)
+                    plt.tight_layout()
+                    st.pyplot(fig5)
+            with col6:
+                if 'Duration_minutes' in df.columns:
+                    fig6, ax6 = plt.subplots(figsize=(6, 5))
+                    sns.scatterplot(data=df, x='Duration_minutes', y='Price', alpha=0.3, ax=ax6, color='#00F0FF')
+                    ax6.set_title("6. Flight Duration vs Price")
+                    plt.tight_layout()
+                    st.pyplot(fig6)
+                    
+            # ROW 4
+            st.markdown("**7. Feature Correlation Matrix**")
+            fig7, ax7 = plt.subplots(figsize=(10, 4))
             numeric_cols = df.select_dtypes(include=[np.number]).columns
-            sns.heatmap(df[numeric_cols].corr(), annot=True, cmap='coolwarm', fmt=".2f", ax=ax5)
-            st.pyplot(fig5)
+            sns.heatmap(df[numeric_cols].corr(), annot=True, cmap='coolwarm', fmt=".2f", ax=ax7)
+            st.pyplot(fig7)
             
             st.markdown("""
             <div style='text-align: center; color: #A0AEC0; font-size: 0.9rem;'>
