@@ -212,18 +212,23 @@ if role == "Administrator":
         st.markdown("Upload new flight data to automatically retrain the AI models for your consumers.")
         
         uploaded_file = st.file_uploader("Upload New Dataset (CSV)", type=['csv'])
+        
+        # Handle Session State for temporary test data
         if uploaded_file is not None:
-            with st.spinner("Ingesting and cleaning new data..."):
+            with st.spinner("Ingesting and cleaning test data..."):
                 raw_df = pd.read_csv(uploaded_file)
-                clean_df = clean_data(raw_df)
-                clean_df.to_csv("cleaned_flights.csv", index=False)
-                st.cache_data.clear()
-                st.cache_resource.clear()
-                st.success(f"Data Pipeline Success! {clean_df.shape[0]:,} clean records saved.")
+                st.session_state['test_df'] = clean_data(raw_df)
+                st.success(f"🧪 Test Pipeline Success! {st.session_state['test_df'].shape[0]:,} records loaded temporarily. Click 'X' to remove file and restore Master Database.")
+        else:
+            if 'test_df' in st.session_state:
+                del st.session_state['test_df']
         
         if os.path.exists("cleaned_flights.csv"):
-            df = pd.read_csv("cleaned_flights.csv")
-            df = clean_data(df)
+            if 'test_df' in st.session_state:
+                df = st.session_state['test_df']
+            else:
+                df = pd.read_csv("cleaned_flights.csv")
+                df = clean_data(df)
             
             st.divider()
             st.subheader("📊 Exploratory Data Analysis")
@@ -328,8 +333,12 @@ elif role == "Traveler":
     if not os.path.exists("cleaned_flights.csv"):
         st.warning("⚠️ The system is currently down for maintenance. The Admin needs to upload a dataset.")
     else:
-        df = pd.read_csv("cleaned_flights.csv")
-        df = clean_data(df) 
+        if 'test_df' in st.session_state:
+            df = st.session_state['test_df']
+            st.warning("🧪 Currently running on temporary test data. Refresh to use production data.")
+        else:
+            df = pd.read_csv("cleaned_flights.csv")
+            df = clean_data(df)
         
         with st.spinner("Loading AI Engines..."):
             best_model, model_cols, _, _ = train_compare_models(df)
