@@ -305,8 +305,16 @@ if role == "Administrator":
             
             st.divider()
             st.subheader("🧠 Model Race & Evaluation")
+            
+            remove_outliers = st.toggle("🧪 Filter Extreme Price Outliers (Top 1%)")
+            model_df = df.copy()
+            if remove_outliers:
+                q99 = model_df['Price'].quantile(0.99)
+                model_df = model_df[model_df['Price'] <= q99]
+                st.caption(f"Filtered {len(df) - len(model_df)} extreme VIP flights. Watch the accuracy jump!")
+                
             with st.spinner("Racing AI Models..."):
-                best_model, model_cols, results_df, importance_df = train_compare_models(df)
+                best_model, model_cols, results_df, importance_df = train_compare_models(model_df)
             
             st.dataframe(results_df.style.highlight_max(subset=['Accuracy (%)'], color='lightgreen'))
             
